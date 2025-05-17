@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.title-font {
+    font-family: 'Roboto', sans-serif;
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+}
+
+.cta-gradient {
+    background: linear-gradient(135deg, #ff4d4d 0%, #f9cb28 100%);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.exit-example {
+    transition: all 0.3s ease;
+}
+
+.exit-example:hover {
+    transform: scale(1.03);
+}
+
+.tone-pill {
+    transition: all 0.2s ease;
+}
+
+.tone-pill:hover {
+    transform: scale(1.05);
+}
