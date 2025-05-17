@@ -61,7 +61,7 @@ jobs:
         id: deploy
         run: |
           # Create a tar archive of the build
-          tar -czf deploy.tar.gz --exclude='.git' --exclude='.github' --exclude='README.md' --exclude='.gitignore' --exclude='node_modules' ./
+          tar -czf deploy.tar.gz --exclude='.git' --exclude='.github' --exclude='README.md' --exclude='.gitignore' ./
           
           # Upload and extract the tar file on remote server using SSH
           max_attempts=3
