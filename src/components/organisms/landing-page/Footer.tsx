@@ -72,14 +72,14 @@ const Footer: React.FC = () => {
             <h2 className="title-font text-2xl font-bold mb-4">The<span className="text-red-500">End</span>.page</h2>
             <p className="max-w-xs opacity-80">Because every ending deserves a proper sendoff.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+          {/* <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {columns.map((column, index) => (
               <FooterColumn key={index} title={column.title} links={column.links} />
             ))}
-          </div>
+          </div> */}
         </div>
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="opacity-80">© 2023 TheEnd.page. All rights reserved.</p>
+          <p className="opacity-80">© 2025 TheEnd.page. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             {socialLinks.map((link, index) => (
               <a 

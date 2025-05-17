@@ -7,8 +7,8 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick, onExamplesClick }) => {
   return (
-    <section className="hero-gradient text-white py-20 md:py-32">
-      <div className="container mx-auto px-4 text-center">
+    <section className="hero-gradient text-white">
+      <div className="container mx-auto text-center h-[100vh] flex flex-col justify-center items-center">
         <h1 className="title-font text-4xl md:text-6xl font-bold mb-6">Make Your Exit Unforgettable</h1>
         <p className="text-xl md:text-2xl max-w-3xl mx-auto mb-10 opacity-90">
           Because if it's the end, make it dramatic, make it clickable, make it <span className="italic">yours</span>.

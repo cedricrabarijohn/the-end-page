@@ -7,8 +7,16 @@ interface ToneOptionProps {
 }
 
 const ToneOption: React.FC<ToneOptionProps> = ({ from, to, text }) => {
+  // Using inline styles for gradients instead of Tailwind classes
+  const gradientStyle = {
+    background: `linear-gradient(to right, ${from}, ${to})`,
+  };
+
   return (
-    <span className={`tone-pill bg-gradient-to-r from-${from} to-${to} text-white px-4 py-2 rounded-full text-sm font-medium`}>
+    <span 
+      className="tone-pill text-white px-4 py-2 rounded-full text-sm font-medium"
+      style={gradientStyle}
+    >
       {text}
     </span>
   )
@@ -16,14 +24,14 @@ const ToneOption: React.FC<ToneOptionProps> = ({ from, to, text }) => {
 
 const ToneOptions: React.FC = () => {
   const toneOptions = [
-    { from: 'red-500', to: 'yellow-500', text: 'Dramatic' },
-    { from: 'blue-400', to: 'blue-600', text: 'Ironic' },
-    { from: 'purple-500', to: 'pink-500', text: 'Cringe' },
-    { from: 'gray-700', to: 'gray-900', text: 'Classy' },
-    { from: 'green-400', to: 'blue-500', text: 'Touching' },
-    { from: 'yellow-500', to: 'red-500', text: 'Absurd' },
-    { from: 'purple-600', to: 'indigo-900', text: 'Passive-Aggressive' },
-    { from: 'blue-900', to: 'teal-400', text: 'Just Honest' },
+    { from: '#ef4444', to: '#eab308', text: 'Dramatic' },
+    { from: '#60a5fa', to: '#2563eb', text: 'Ironic' },
+    { from: '#a855f7', to: '#ec4899', text: 'Cringe' },
+    { from: '#374151', to: '#111827', text: 'Classy' },
+    { from: '#4ade80', to: '#3b82f6', text: 'Touching' },
+    { from: '#eab308', to: '#ef4444', text: 'Absurd' },
+    { from: '#7c3aed', to: '#312e81', text: 'Passive-Aggressive' },
+    { from: '#1e3a8a', to: '#2dd4bf', text: 'Just Honest' },
   ];
 
   return (
