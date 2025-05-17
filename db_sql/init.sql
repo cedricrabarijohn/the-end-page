@@ -17,7 +17,7 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Create a test user (password: test123)
-INSERT INTO users (email, firstname, lastname, avatar, hashed_password)
-VALUES ('test@example.com', 'John', 'Doe', NULL, '$2a$10$xVfzGxq5uZ3Up6I3KVtqvekRCPQWjEzG4g6V2WPu7XJyjLot5xeK.');
+-- INSERT INTO users (email, firstname, lastname, avatar, hashed_password)
+-- VALUES ('test@example.com', 'John', 'Doe', NULL, '$2a$10$xVfzGxq5uZ3Up6I3KVtqvekRCPQWjEzG4g6V2WPu7XJyjLot5xeK.');
 
 -- Add additional tables as needed for your application below
