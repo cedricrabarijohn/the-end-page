@@ -1,15 +1,34 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { PAGES_ROUTES } from '@/globals';
+import { login } from '@/axios/auth';
+import Alert from '@/components/molecules/Alert';
+import Loader from '@/components/atoms/Loader';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
+        if (loading) return;
         // Handle login logic here
-        console.log('Logging in with:', email, password);
+        if (!email || !password) {
+            setError('All fields are required');
+            return;
+        }
+        try {
+            setLoading(true);
+            setError(null);
+            const resp = await login(email, password);
+        } catch (err) {
+            const errMessage = (err as any)?.response?.data?.error || 'An error occured';
+            setError(errMessage);
+        } finally {
+            setLoading(false);
+        };
     };
 
     return (
@@ -54,6 +73,7 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+                        {error && <Alert type='error'>{error}</Alert>}
                     </div>
 
                     {/* <div className="flex items-center justify-between">
@@ -81,7 +101,7 @@ const Login = () => {
                             type="submit"
                             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
-                            Sign in
+                            {loading ? <Loader /> : <>Sign in</>}
                         </button>
                     </div>
                 </form>

@@ -13,6 +13,19 @@ export async function findUserByEmail(email: string) {
     return rows as any[];
 }
 
+export async function findUserById(id: string) {
+    const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [id]);
+    return rows as any[];
+}
+export async function findUserByEmailAndPassword(email: string, password: string) {
+    const hashedPassword = await hashPassword(password);
+    const [rows] = await pool.query(
+        "SELECT * FROM users WHERE email = ? AND hashed_password = ?",
+        [email, hashedPassword]
+    );
+    return rows as any[];
+}
+
 export async function createUser({
     firstname,
     lastname,
