@@ -1,3 +1,4 @@
+import { PAGES_ROUTES } from '@/globals';
 import React from 'react';
 
 interface NavigationProps {
@@ -25,7 +26,7 @@ const Navigation: React.FC<NavigationProps> = ({
         <button onClick={onHowItWorksClick} className="hover:text-red-400 transition">How It Works</button>
       </div>
       <div>
-        <button onClick={onCtaClick} className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 text-sm sm:py-2 sm:px-6 sm:text-base rounded-full transition">
+        <button onClick={() => window.location.href = PAGES_ROUTES.AUTH.LOGIN} className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 text-sm sm:py-2 sm:px-6 sm:text-base rounded-full transition">
           Create Yours
         </button>
       </div>
