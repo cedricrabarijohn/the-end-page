@@ -1,0 +1,151 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Build project
+        run: npm run build
+      
+      - name: Create .env file if needed
+        run: |
+          if [ -f ".env.staging" ]; then
+            cp .env.staging .env
+          elif [ -f ".env.production" ]; then
+            cp .env.production .env
+          fi
+      
+      - name: Install SSH client
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y openssh-client
+            # Verify installation
+            ssh -V
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Generate known_hosts file
+          ssh-keyscan -p 22974 -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          
+      - name: Deploy to staging server via SSH
+        id: deploy
+        run: |
+          # Create a temporary directory for deployment
+          mkdir -p deploy_package
+          
+          # Copy required files to the deployment directory
+          # This avoids the "file changed as we read it" error
+          cp -r $(ls -A | grep -v "node_modules\|.git\|.github\|README.md\|.gitignore\|deploy_package") deploy_package/
+          
+          # Create the tar archive from the stable deployment directory
+          tar -czf deploy.tar.gz -C deploy_package .
+          
+          # Upload and extract the tar file on remote server using SSH
+          max_attempts=3
+          attempt=1
+          
+          while [ $attempt -le $max_attempts ]
+          do
+            echo "SSH deployment attempt $attempt of $max_attempts"
+            # Create shared directory structure first
+            if ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "mkdir -p /home/illuminit/shared_config /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host" && \
+               # Copy .env file to shared directory if it doesn't exist
+               scp -P 22974 -o ConnectTimeout=30 deploy.tar.gz illuminit@tnr1.hodi.host:/home/illuminit/temp_deploy.tar.gz && \
+               ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "
+                 # Backup existing .env if it exists in the shared directory
+                 if [ -f '/home/illuminit/staging.illuminit.madagascar.webcup.hodi.host/.env' ] && [ ! -f '/home/illuminit/shared_config/staging.env' ]; then
+                   cp /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host/.env /home/illuminit/shared_config/staging.env
+                 fi
+                 
+                 # Extract files but preserve shared config
+                 tar -xzf /home/illuminit/temp_deploy.tar.gz -C /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host && \
+                 
+                 # Link the shared .env file into the application directory
+                 if [ -f '/home/illuminit/shared_config/staging.env' ]; then
+                   ln -sf /home/illuminit/shared_config/staging.env /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host/.env
+                 fi
+                 
+                 # Clean up
+                 rm /home/illuminit/temp_deploy.tar.gz
+                 
+                 # Restart the Node.js application
+                 echo 'Restarting Node.js application...'
+                 if command -v pm2 &> /dev/null; then
+                   cd /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host && pm2 reload all || pm2 restart all || pm2 start npm --name \"staging-the-end-page\" -- start
+                 elif [ -f '/home/illuminit/scripts/restart_app.sh' ]; then
+                   bash /home/illuminit/scripts/restart_app.sh
+                 else
+                   # Try to find and use standard cPanel Node.js app restart
+                   if [ -f '/usr/local/cpanel/scripts/restartsrv_nodejs_app' ]; then
+                     /usr/local/cpanel/scripts/restartsrv_nodejs_app staging.illuminit.madagascar.webcup.hodi.host
+                   elif [ -f '/scripts/restartsrv' ]; then
+                     /scripts/restartsrv nodejs
+                   else
+                     echo 'Unable to automatically restart app. Manual restart may be required.'
+                   fi
+                 fi
+               "; then
+              echo "SSH deployment completed successfully!"
+              break
+            else
+              echo "SSH deployment attempt $attempt failed with exit code $?"
+              if [ $attempt -lt $max_attempts ]; then
+                echo "Waiting 10 seconds before retrying..."
+                sleep 10
+              fi
+            fi
+            attempt=$((attempt+1))
+          done
+          
+          if [ $attempt -gt $max_attempts ]; then
+            echo "All SSH deployment attempts failed"
+            exit 1
+          fi
+
+      - name: Deployment Status
+        if: always()
+        run: |
+          if [ "${{ steps.deploy.outcome }}" == "success" ]; then
+            echo "✅ Staging deployment completed successfully!"
+          else
+            echo "❌ Staging deployment failed. Check logs for details."
+            exit 1
+          fi
+          
+      - name: Send deployment notification
+        if: always()
+        run: |
+          echo "SSH Deployment to staging server ${{ steps.deploy.outcome == 'success' && 'succeeded! 🚀' || 'failed! ❌' }}"
+          echo "Staging URL: https://staging.illuminit.madagascar.webcup.hodi.host"
