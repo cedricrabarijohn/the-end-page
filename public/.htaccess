@@ -1,0 +1,58 @@
+# Custom .htaccess for Next.js static export on cPanel
+
+# Ensure proper MIME types are set
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType image/svg+xml .svg
+</IfModule>
+
+# Enable compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Enable caching
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType application/json "access plus 0 seconds"
+</IfModule>
+
+# Handle routing for Next.js static export
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # If the requested resource exists as a file or directory, serve it directly
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # For all routes not matching an existing file or directory
+  # Rewrite to the corresponding html file or 404
+  RewriteRule ^([^.]+)$ $1.html [L]
+  
+  # If the HTML file doesn't exist either, serve the 404 page
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ 404.html [L]
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set security headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>

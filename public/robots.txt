@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Block specific paths if needed
+# Disallow: /api/
+
+Sitemap: https://theend.page/sitemap.xml

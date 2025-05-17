@@ -1,0 +1,69 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Build project
+        run: npm run build
+      
+      - name: Create .env file if needed
+        run: |
+          if [ -f ".env.production" ]; then
+            cp .env.production .env
+          fi
+          
+      - name: Deploy to cPanel
+        id: deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.CPANEL_SERVER }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          password: ${{ secrets.CPANEL_PASSWORD }}
+          local-dir: ./.next/
+          server-dir: ${{ secrets.CPANEL_REMOTE_DIR }}
+          dangerous-clean-slate: true
+          
+      - name: Deployment Status
+        if: always()
+        run: |
+          if [ "${{ steps.deploy.outcome }}" == "success" ]; then
+            echo "✅ Deployment completed successfully!"
+          else
+            echo "❌ Deployment failed. Check logs for details."
+            exit 1
+          fi
+          
+      - name: Send deployment notification
+        if: always()
+        run: |
+          echo "Deployment to cPanel ${{ steps.deploy.outcome == 'success' && 'succeeded! 🚀' || 'failed! ❌' }}"
+          echo "Site URL: https://${{ secrets.CPANEL_SERVER }}"
