@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import Navigation from '@/components/organisms/landing-page/Navigation'
 import HeroSection from '@/components/organisms/landing-page/HeroSection'
@@ -14,9 +14,33 @@ export default function Home() {
   const examplesRef = useRef<HTMLDivElement>(null)
   const howItWorksRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     sectionRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    // Check if already authenticated in localStorage
+    const storedAuth = localStorage.getItem('xxxxxxxllllll')
+    
+    if (storedAuth === 'true') {
+      setIsAuthenticated(true)
+      return
+    }
+    
+    const username = prompt('Please enter your username:')
+    const password = prompt('Please enter your password:')
+
+    if (username !== 'test' || password !== 'lelena') {
+      alert('Authentication failed. You are not authorized to access this page.')
+    } else {
+      setIsAuthenticated(true)
+      localStorage.setItem('xxxxxxxllllll', 'true')
+    }
+  }, []);
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   return (
