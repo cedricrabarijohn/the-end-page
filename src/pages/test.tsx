@@ -1,5 +1,5 @@
 const Test = () => {
-    return <>Test pory</>
+    return <>This is a test</>
 }
 
 
