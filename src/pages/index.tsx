@@ -1,13 +1,13 @@
 import { useRef } from 'react'
 import Head from 'next/head'
-import Navigation from '@/components/Navigation'
-import HeroSection from '@/components/HeroSection'
-import FeaturesSection from '@/components/FeaturesSection'
-import ToneOptions from '@/components/ToneOptions'
-import ExamplesSection from '@/components/ExamplesSection'
-import HowItWorks from '@/components/HowItWorks'
-import CtaSection from '@/components/CtaSection'
-import Footer from '@/components/Footer'
+import Navigation from '@/components/organisms/landing-page/Navigation'
+import HeroSection from '@/components/organisms/landing-page/HeroSection'
+import FeaturesSection from '@/components/organisms/landing-page/FeaturesSection'
+import ToneOptions from '@/components/organisms/landing-page/ToneOptions'
+import ExamplesSection from '@/components/organisms/landing-page/ExamplesSection'
+import HowItWorks from '@/components/organisms/landing-page/HowItWorks'
+import CtaSection from '@/components/organisms/landing-page/CtaSection'
+import Footer from '@/components/organisms/landing-page/Footer'
 
 export default function Home() {
   const featuresRef = useRef<HTMLDivElement>(null)
