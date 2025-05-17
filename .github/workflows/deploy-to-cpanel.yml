@@ -42,7 +42,11 @@ jobs:
           fi
       
       - name: Install SSH client
-        run: sudo apt-get update && sudo apt-get install -y openssh-client rsync
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y openssh-client rsync
+            which rsync || echo "rsync not found"
+            rsync --version || echo "rsync command failed"
 
       - name: Set up SSH key
         run: |
