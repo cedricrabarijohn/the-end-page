@@ -60,33 +60,24 @@ jobs:
           if [ -f ".env.production" ]; then
             cp .env.production .env
           fi
-      - name: 📂 Sync Files
-        uses: SamKirkland/web-deploy@v1
-        with:
-          target-server: tnr1.hodi.host
-          remote-user: illuminit
-          private-ssh-key: ${{ secrets.SSH_KEY }}
-          destination-path: ~/${{ secrets.CPANEL_REMOTE_DIR }}
-          ssh-port: 22974
-      # - name: Deploy to cPanel
-      #   id: deploy
-      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      #   with:
-      #     server: ${{ secrets.CPANEL_SERVER }}
-      #     username: ${{ secrets.CPANEL_USERNAME }}
-      #     password: ${{ secrets.CPANEL_PASSWORD }}
-      #     local-dir: ./
-      #     server-dir: ${{ secrets.CPANEL_REMOTE_DIR }}
-      #     dangerous-clean-slate: true
-      #     exclude: |
-      #       **/.git*/**
-      #       **/.git*
-      #       **/README.md
-      #       **/*.md
-      #       .env.local
-      #       .env.development
-      #       node_modules/**
-            
+      
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client rsync
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Generate known_hosts file
+          ssh-keyscan -p 22974 -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy to server via SSH
+        id: deploy
+        run: |
+          rsync -avz -e "ssh -p 22974" --delete --exclude '.git/' --exclude '.github/' --exclude 'README.md' --exclude '.gitignore' --exclude 'node_modules/' ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_TARGET_DIR }}
+          
       - name: Deployment Status
         if: always()
         run: |
@@ -100,5 +91,5 @@ jobs:
       - name: Send deployment notification
         if: always()
         run: |
-          echo "Deployment to cPanel ${{ steps.deploy.outcome == 'success' && 'succeeded! 🚀' || 'failed! ❌' }}"
-          echo "Site URL: https://${{ secrets.CPANEL_SERVER }}"
+          echo "SSH Deployment to server ${{ steps.deploy.outcome == 'success' && 'succeeded! 🚀' || 'failed! ❌' }}"
+          echo "Site URL: https://${{ secrets.SSH_HOST }}"
