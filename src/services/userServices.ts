@@ -1,10 +1,27 @@
 import pool from "@/lib/db";
 import { sha256 } from "js-sha256";
+const jwt = require("jsonwebtoken");
 // js-sha256
+
+const jwtSecret = process.env.JWT || 'your-secret-key';
+
+export async function generateJwt(datas: any, expiration = '24h') {
+    const token = jwt.sign(datas, jwtSecret, { expiresIn: expiration });
+    return token;
+}
+
+export async function verifyJwt(token: string) {
+    try {
+        const decoded = jwt.verify(token, jwtSecret);
+        return decoded;
+    } catch (error) {
+        console.error("JWT verification error:", error);
+        return null;
+    }
+}
 
 export async function hashPassword(password: string) {
     const hashedPassword = sha256(password);
-    console.log("Hashed password:", hashedPassword);
     return hashedPassword;
 }
 

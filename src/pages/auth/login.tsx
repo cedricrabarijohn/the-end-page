@@ -27,7 +27,7 @@ const Login = () => {
             if (resp?.status === 200) {
                 setError(null);
                 toast.success('Login successful');
-                window.location.href = PAGES_ROUTES.HOME;
+                // window.location.href = PAGES_ROUTES.HOME;
             } else {
                 setError('Invalid email or password');
             }

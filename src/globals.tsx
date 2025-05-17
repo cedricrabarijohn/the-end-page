@@ -26,3 +26,8 @@ export const API_ROUTES = {
         UPDATE_PROFILE: '/api/user/profile/update',
     }
 };
+
+export const COOKIES = {
+    TOKEN: 'jwt-token',
+    CHECK_AUTH: 'check-auth',
+};
