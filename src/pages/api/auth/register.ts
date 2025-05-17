@@ -11,7 +11,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!firstname || !lastname || !email || !password) {
         return res.status(400).json({ error: "Missing required fields" });
     }
-    
+
+    console.log("Registering user:", { firstname, lastname, email, password });
+
     return res.status(200).json({ message: "Hello from the register API!" });
 }
 

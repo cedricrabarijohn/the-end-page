@@ -1,3 +1,4 @@
+import { PAGES_ROUTES } from '@/globals';
 import React, { forwardRef } from 'react';
 
 const CtaSection = forwardRef<HTMLDivElement>((_props, ref) => {
@@ -8,7 +9,9 @@ const CtaSection = forwardRef<HTMLDivElement>((_props, ref) => {
         <p className="text-xl opacity-90 max-w-2xl mx-auto mb-10">
           Create your unforgettable goodbye page in minutes. No regrets, just drama.
         </p>
-        <button className="cta-gradient hover:opacity-90 text-black font-bold py-4 px-8 rounded-full text-lg inline-block transition transform hover:scale-105">
+        <button onClick={() => {
+          window.location.href = PAGES_ROUTES.AUTH.LOGIN;
+        }} className="cta-gradient hover:opacity-90 text-black font-bold py-4 px-8 rounded-full text-lg inline-block transition transform hover:scale-105">
           Create Your Exit Page <i className="fas fa-fire ml-2"></i>
         </button>
       </div>

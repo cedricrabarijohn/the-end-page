@@ -1,3 +1,4 @@
+import { PAGES_ROUTES } from '@/globals';
 import React from 'react';
 
 interface HeroSectionProps {
@@ -15,7 +16,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick, onExamplesClick }
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-4">
           <button 
-            onClick={onCtaClick} 
+            onClick={() => {
+              window.location.href = PAGES_ROUTES.AUTH.LOGIN;
+            }} 
             className="cta-gradient hover:opacity-90 text-black font-bold py-4 px-8 rounded-full text-lg transition transform hover:scale-105"
           >
             Create Your Exit Page <i className="fas fa-arrow-right ml-2"></i>
