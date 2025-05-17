@@ -41,12 +41,11 @@ jobs:
             cp .env.production .env
           fi
       
-      - name: Install SSH client and rsync
+      - name: Install SSH client
         run: |
             sudo apt-get update
-            sudo apt-get install -y openssh-client rsync
+            sudo apt-get install -y openssh-client
             # Verify installation
-            rsync --version
             ssh -V
 
       - name: Set up SSH key
@@ -58,29 +57,27 @@ jobs:
           ssh-keyscan -p 22974 -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
           
-      - name: Verify SSH connection
-        run: |
-          # Test SSH connection before attempting rsync
-          ssh -p 22974 -o BatchMode=yes -o ConnectTimeout=5 illuminit@tnr1.hodi.host echo "SSH connection successful"
-
       - name: Deploy to server via SSH
         id: deploy
         run: |
-          # Adding retries to handle potential connection issues
+          # Create a tar archive of the build
+          tar -czf deploy.tar.gz --exclude='.git' --exclude='.github' --exclude='README.md' --exclude='.gitignore' --exclude='node_modules' ./
+          
+          # Upload and extract the tar file on remote server using SSH
           max_attempts=3
           attempt=1
           
           while [ $attempt -le $max_attempts ]
           do
-            echo "Deployment attempt $attempt of $max_attempts"
-            if rsync -avz -e "ssh -p 22974" --stats --timeout=60 --delete \
-              --exclude '.git/' --exclude '.github/' --exclude 'README.md' \
-              --exclude '.gitignore' --exclude 'node_modules/' \
-              ./ illuminit@tnr1.hodi.host:/home/illuminit/the-end-page/; then
-              echo "Rsync completed successfully!"
+            echo "SSH deployment attempt $attempt of $max_attempts"
+            if scp -P 22974 -o ConnectTimeout=30 deploy.tar.gz illuminit@tnr1.hodi.host:/home/illuminit/temp_deploy.tar.gz && \
+               ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "mkdir -p /home/illuminit/the-end-page && \
+               tar -xzf /home/illuminit/temp_deploy.tar.gz -C /home/illuminit/the-end-page && \
+               rm /home/illuminit/temp_deploy.tar.gz"; then
+              echo "SSH deployment completed successfully!"
               break
             else
-              echo "Rsync attempt $attempt failed with exit code $?"
+              echo "SSH deployment attempt $attempt failed with exit code $?"
               if [ $attempt -lt $max_attempts ]; then
                 echo "Waiting 10 seconds before retrying..."
                 sleep 10
@@ -90,10 +87,10 @@ jobs:
           done
           
           if [ $attempt -gt $max_attempts ]; then
-            echo "All rsync attempts failed"
+            echo "All SSH deployment attempts failed"
             exit 1
           fi
-          
+
       - name: Deployment Status
         if: always()
         run: |
