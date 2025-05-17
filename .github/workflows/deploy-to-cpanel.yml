@@ -41,12 +41,13 @@ jobs:
             cp .env.production .env
           fi
       
-      - name: Install SSH client
+      - name: Install SSH client and rsync
         run: |
             sudo apt-get update
             sudo apt-get install -y openssh-client rsync
-            which rsync || echo "rsync not found"
-            rsync --version || echo "rsync command failed"
+            # Verify installation
+            rsync --version
+            ssh -V
 
       - name: Set up SSH key
         run: |
@@ -56,11 +57,42 @@ jobs:
           # Generate known_hosts file
           ssh-keyscan -p 22974 -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
+          
+      - name: Verify SSH connection
+        run: |
+          # Test SSH connection before attempting rsync
+          ssh -p 22974 -o BatchMode=yes -o ConnectTimeout=5 illuminit@tnr1.hodi.host echo "SSH connection successful"
 
       - name: Deploy to server via SSH
         id: deploy
         run: |
-          rsync -avz -e "ssh -p 22974" --delete --exclude '.git/' --exclude '.github/' --exclude 'README.md' --exclude '.gitignore' --exclude 'node_modules/' ./ illuminit@tnr1.hodi.host:/home/illuminit/the-end-page/
+          # Adding retries to handle potential connection issues
+          max_attempts=3
+          attempt=1
+          
+          while [ $attempt -le $max_attempts ]
+          do
+            echo "Deployment attempt $attempt of $max_attempts"
+            if rsync -avz -e "ssh -p 22974" --stats --timeout=60 --delete \
+              --exclude '.git/' --exclude '.github/' --exclude 'README.md' \
+              --exclude '.gitignore' --exclude 'node_modules/' \
+              ./ illuminit@tnr1.hodi.host:/home/illuminit/the-end-page/; then
+              echo "Rsync completed successfully!"
+              break
+            else
+              echo "Rsync attempt $attempt failed with exit code $?"
+              if [ $attempt -lt $max_attempts ]; then
+                echo "Waiting 10 seconds before retrying..."
+                sleep 10
+              fi
+            fi
+            attempt=$((attempt+1))
+          done
+          
+          if [ $attempt -gt $max_attempts ]; then
+            echo "All rsync attempts failed"
+            exit 1
+          fi
           
       - name: Deployment Status
         if: always()
