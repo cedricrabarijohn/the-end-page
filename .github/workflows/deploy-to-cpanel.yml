@@ -100,20 +100,7 @@ jobs:
                  
                  # Restart the Node.js application
                  echo 'Restarting Node.js application...'
-                 if command -v pm2 &> /dev/null; then
-                   cd /home/illuminit/the-end-page && pm2 reload all || pm2 restart all || pm2 start npm --name \"the-end-page\" -- start
-                 elif [ -f '/home/illuminit/scripts/restart_app.sh' ]; then
-                   bash /home/illuminit/scripts/restart_app.sh
-                 else
-                   # Try to find and use standard cPanel Node.js app restart
-                   if [ -f '/usr/local/cpanel/scripts/restartsrv_nodejs_app' ]; then
-                     /usr/local/cpanel/scripts/restartsrv_nodejs_app the-end-page
-                   elif [ -f '/scripts/restartsrv' ]; then
-                     /scripts/restartsrv nodejs
-                   else
-                     echo 'Unable to automatically restart app. Manual restart may be required.'
-                   fi
-                 fi
+                 cd /home/illuminit/test-the-end-page/tmp && touch restart.txt
                "; then
               echo "SSH deployment completed successfully!"
               break
