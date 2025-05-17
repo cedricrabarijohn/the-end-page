@@ -62,17 +62,12 @@ jobs:
       - name: Deploy to staging server via SSH
         id: deploy
         run: |
-          # Create a temporary directory for deployment
           mkdir -p deploy_package
           
-          # Copy required files to the deployment directory
-          # This avoids the "file changed as we read it" error
           cp -r $(ls -A | grep -v "node_modules\|.git\|.github\|README.md\|.gitignore\|deploy_package") deploy_package/
           
-          # Create the tar archive from the stable deployment directory
           tar -czf deploy.tar.gz -C deploy_package .
           
-          # Upload and extract the tar file on remote server using SSH
           max_attempts=3
           attempt=1
           
