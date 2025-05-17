@@ -60,25 +60,31 @@ jobs:
           if [ -f ".env.production" ]; then
             cp .env.production .env
           fi
-          
-      - name: Deploy to cPanel
-        id: deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: 📂 Sync Files
+        uses: SamKirkland/web-deploy@v1
         with:
-          server: ${{ secrets.CPANEL_SERVER }}
-          username: ${{ secrets.CPANEL_USERNAME }}
-          password: ${{ secrets.CPANEL_PASSWORD }}
-          local-dir: ./
-          server-dir: ${{ secrets.CPANEL_REMOTE_DIR }}
-          dangerous-clean-slate: true
-          exclude: |
-            **/.git*/**
-            **/.git*
-            **/README.md
-            **/*.md
-            .env.local
-            .env.development
-            node_modules/**
+          target-server: ${{ secrets.CPANEL_SERVER }}
+          remote-user: ${{ secrets.CPANEL_USERNAME }}
+          private-ssh-key: ${{ secrets.SSH_KEY }}
+          destination-path: ~/${{ secrets.CPANEL_REMOTE_DIR }}
+      # - name: Deploy to cPanel
+      #   id: deploy
+      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      #   with:
+      #     server: ${{ secrets.CPANEL_SERVER }}
+      #     username: ${{ secrets.CPANEL_USERNAME }}
+      #     password: ${{ secrets.CPANEL_PASSWORD }}
+      #     local-dir: ./
+      #     server-dir: ${{ secrets.CPANEL_REMOTE_DIR }}
+      #     dangerous-clean-slate: true
+      #     exclude: |
+      #       **/.git*/**
+      #       **/.git*
+      #       **/README.md
+      #       **/*.md
+      #       .env.local
+      #       .env.development
+      #       node_modules/**
             
       - name: Deployment Status
         if: always()
