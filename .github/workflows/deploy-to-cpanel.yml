@@ -56,7 +56,7 @@ jobs:
       - name: Deploy to server via SSH
         id: deploy
         run: |
-          rsync -avz -e "ssh -p 22974" --delete --exclude '.git/' --exclude '.github/' --exclude 'README.md' --exclude '.gitignore' --exclude 'node_modules/' ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_TARGET_DIR }}
+          rsync -avz -e "ssh -p 22974" --delete --exclude '.git/' --exclude '.github/' --exclude 'README.md' --exclude '.gitignore' --exclude 'node_modules/' ./ illuminit@tnr1.hodi.host:/home/illuminit/the-end-page/
           
       - name: Deployment Status
         if: always()
