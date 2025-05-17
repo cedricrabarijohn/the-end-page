@@ -77,10 +77,27 @@ jobs:
           while [ $attempt -le $max_attempts ]
           do
             echo "SSH deployment attempt $attempt of $max_attempts"
-            if scp -P 22974 -o ConnectTimeout=30 deploy.tar.gz illuminit@tnr1.hodi.host:/home/illuminit/temp_deploy.tar.gz && \
-               ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "mkdir -p /home/illuminit/the-end-page && \
-               tar -xzf /home/illuminit/temp_deploy.tar.gz -C /home/illuminit/the-end-page && \
-               rm /home/illuminit/temp_deploy.tar.gz"; then
+            # Create shared directory structure first
+            if ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "mkdir -p /home/illuminit/shared_config /home/illuminit/the-end-page" && \
+               # Copy .env file to shared directory if it doesn't exist
+               scp -P 22974 -o ConnectTimeout=30 deploy.tar.gz illuminit@tnr1.hodi.host:/home/illuminit/temp_deploy.tar.gz && \
+               ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "
+                 # Backup existing .env if it exists in the shared directory
+                 if [ -f '/home/illuminit/the-end-page/.env' ] && [ ! -f '/home/illuminit/shared_config/.env' ]; then
+                   cp /home/illuminit/the-end-page/.env /home/illuminit/shared_config/.env
+                 fi
+                 
+                 # Extract files but preserve shared config
+                 tar -xzf /home/illuminit/temp_deploy.tar.gz -C /home/illuminit/the-end-page && \
+                 
+                 # Link the shared .env file into the application directory
+                 if [ -f '/home/illuminit/shared_config/.env' ]; then
+                   ln -sf /home/illuminit/shared_config/.env /home/illuminit/the-end-page/.env
+                 fi
+                 
+                 # Clean up
+                 rm /home/illuminit/temp_deploy.tar.gz
+               "; then
               echo "SSH deployment completed successfully!"
               break
             else
