@@ -28,26 +28,6 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      - name: Check env secrets
-        run: |
-          if [ -z "${{ secrets.CPANEL_SERVER }}" ]; then
-            echo "Error: CPANEL_SERVER secret is not set."
-            exit 1
-          fi
-          if [ -z "${{ secrets.CPANEL_USERNAME }}" ]; then
-            echo "Error: CPANEL_USERNAME secret is not set."
-            exit 1
-          fi
-          if [ -z "${{ secrets.CPANEL_PASSWORD }}" ]; then
-            echo "Error: CPANEL_PASSWORD secret is not set."
-            exit 1
-          fi
-          if [ -z "${{ secrets.CPANEL_REMOTE_DIR }}" ]; then
-            echo "Error: CPANEL_REMOTE_DIR secret is not set."
-            exit 1
-          fi
-          echo "cpanel remote dir is: ${{ secrets.CPANEL_REMOTE_DIR }}"
-          echo "All required secrets are set."
       
       - name: Install dependencies
         run: npm install
