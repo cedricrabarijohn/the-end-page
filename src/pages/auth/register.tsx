@@ -4,6 +4,7 @@ import { PAGES_ROUTES } from '@/globals';
 import Alert from '@/components/molecules/Alert';
 import Loader from '@/components/atoms/Loader';
 import { register } from '@/axios/auth';
+import toast from 'react-hot-toast';
 
 const validateEmail = (email: string): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -35,9 +36,9 @@ const Register = () => {
                 return;
             }
             const resp = await register(firstname, lastname, email, password);
-            console.log('resp', resp);
             if (resp?.status === 200) {
                 setError(null);
+                toast.success('Account created successfully');
                 window.location.href = PAGES_ROUTES.AUTH.LOGIN;
             }
         } catch (err) {

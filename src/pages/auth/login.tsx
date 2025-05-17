@@ -4,6 +4,7 @@ import { PAGES_ROUTES } from '@/globals';
 import { login } from '@/axios/auth';
 import Alert from '@/components/molecules/Alert';
 import Loader from '@/components/atoms/Loader';
+import toast from 'react-hot-toast';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -23,6 +24,13 @@ const Login = () => {
             setLoading(true);
             setError(null);
             const resp = await login(email, password);
+            if (resp?.status === 200) {
+                setError(null);
+                toast.success('Login successful');
+                window.location.href = PAGES_ROUTES.HOME;
+            } else {
+                setError('Invalid email or password');
+            }
         } catch (err) {
             const errMessage = (err as any)?.response?.data?.error || 'An error occured';
             setError(errMessage);
