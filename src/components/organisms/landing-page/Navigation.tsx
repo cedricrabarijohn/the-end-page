@@ -14,7 +14,7 @@ const Navigation: React.FC<NavigationProps> = ({
   onCtaClick
 }) => {
   return (
-    <nav className="bg-black bg-opacity-80 backdrop-blur-md text-white py-4 sticky top-0 z-50 shadow-lg">
+    <nav className="bg-black bg-opacity-80 backdrop-blur-[5px] text-white py-4 sticky top-0 z-50 shadow-lg">
       <div className="container mx-auto px-4 flex justify-between items-center">
       <div className="flex items-center">
         <h1 className="title-font text-2xl md:text-3xl font-bold">The<span className="text-red-500">End</span>.page</h1>
@@ -25,8 +25,8 @@ const Navigation: React.FC<NavigationProps> = ({
         <button onClick={onHowItWorksClick} className="hover:text-red-400 transition">How It Works</button>
       </div>
       <div>
-        <button onClick={onCtaClick} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full transition">
-        Create Yours
+        <button onClick={onCtaClick} className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 text-sm sm:py-2 sm:px-6 sm:text-base rounded-full transition">
+          Create Yours
         </button>
       </div>
       </div>
