@@ -34,9 +34,14 @@ const Register = () => {
                 return;
             }
             const resp = await register(firstname, lastname, email, password);
+            console.log('resp', resp);
+            if (resp?.status === 200) {
+                setError(null);
+                window.location.href = PAGES_ROUTES.AUTH.LOGIN;
+            }
         } catch (err) {
-            console.log(err);
-            setError('An error occured')
+            const errMessage = (err as any)?.response?.data?.error || 'An error occured';
+            setError(errMessage);
         } finally {
             setLoading(false);
         }
