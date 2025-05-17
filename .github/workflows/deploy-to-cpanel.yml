@@ -65,7 +65,7 @@ jobs:
           
           # Copy required files to the deployment directory
           # This avoids the "file changed as we read it" error
-          cp -r $(ls -A | grep -v "node_modules\|.git\|.github\|README.md\|.gitignore\|deploy_package") deploy_package/
+          cp -r $(ls -A | grep -v ".git\|.github\|README.md\|.gitignore\|deploy_package") deploy_package/
           
           # Create the tar archive from the stable deployment directory
           tar -czf deploy.tar.gz -C deploy_package .
@@ -97,6 +97,11 @@ jobs:
                  
                  # Clean up
                  rm /home/illuminit/temp_deploy.tar.gz
+
+                 # Create a symlink to node_modules
+                 if [ ! -d '/home/illuminit/the-end-page/node_modules' ]; then
+                   ln -s /home/illuminit/nodevenv/the-end-page/20/lib/node_modules /home/illuminit/the-end-page/node_modules
+                 fi  
                  
                  # Restart the Node.js application
                  echo 'Restarting Node.js application...'
