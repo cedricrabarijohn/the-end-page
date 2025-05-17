@@ -67,6 +67,7 @@ jobs:
           remote-user: ${{ secrets.CPANEL_USERNAME }}
           private-ssh-key: ${{ secrets.SSH_KEY }}
           destination-path: ~/${{ secrets.CPANEL_REMOTE_DIR }}
+          ssh-port: 22974
       # - name: Deploy to cPanel
       #   id: deploy
       #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
