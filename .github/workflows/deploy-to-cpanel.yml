@@ -100,7 +100,7 @@ jobs:
                  
                  # Restart the Node.js application
                  echo 'Restarting Node.js application...'
-                 cd /home/illuminit/test-the-end-page/tmp && touch restart.txt
+                 cd /home/illuminit/the-end-page/tmp && touch restart.txt
                "; then
               echo "SSH deployment completed successfully!"
               break
