@@ -75,21 +75,21 @@ jobs:
           do
             echo "SSH deployment attempt $attempt of $max_attempts"
             # Create shared directory structure first
-            if ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "mkdir -p /home/illuminit/shared_config /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host" && \
+            if ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "mkdir -p /home/illuminit/shared_config /home/illuminit/test-the-end-page" && \
                # Copy .env file to shared directory if it doesn't exist
                scp -P 22974 -o ConnectTimeout=30 deploy.tar.gz illuminit@tnr1.hodi.host:/home/illuminit/temp_deploy.tar.gz && \
                ssh -p 22974 -o ConnectTimeout=30 illuminit@tnr1.hodi.host "
                  # Backup existing .env if it exists in the shared directory
-                 if [ -f '/home/illuminit/staging.illuminit.madagascar.webcup.hodi.host/.env' ] && [ ! -f '/home/illuminit/shared_config/staging.env' ]; then
-                   cp /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host/.env /home/illuminit/shared_config/staging.env
+                 if [ -f '/home/illuminit/test-the-end-page/.env' ] && [ ! -f '/home/illuminit/shared_config/staging.env' ]; then
+                   cp /home/illuminit/test-the-end-page/.env /home/illuminit/shared_config/staging.env
                  fi
                  
                  # Extract files but preserve shared config
-                 tar -xzf /home/illuminit/temp_deploy.tar.gz -C /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host && \
+                 tar -xzf /home/illuminit/temp_deploy.tar.gz -C /home/illuminit/test-the-end-page && \
                  
                  # Link the shared .env file into the application directory
                  if [ -f '/home/illuminit/shared_config/staging.env' ]; then
-                   ln -sf /home/illuminit/shared_config/staging.env /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host/.env
+                   ln -sf /home/illuminit/shared_config/staging.env /home/illuminit/test-the-end-page/.env
                  fi
                  
                  # Clean up
@@ -98,13 +98,13 @@ jobs:
                  # Restart the Node.js application
                  echo 'Restarting Node.js application...'
                  if command -v pm2 &> /dev/null; then
-                   cd /home/illuminit/staging.illuminit.madagascar.webcup.hodi.host && pm2 reload all || pm2 restart all || pm2 start npm --name \"staging-the-end-page\" -- start
+                   cd /home/illuminit/test-the-end-page && pm2 reload all || pm2 restart all || pm2 start npm --name \"staging-the-end-page\" -- start
                  elif [ -f '/home/illuminit/scripts/restart_app.sh' ]; then
                    bash /home/illuminit/scripts/restart_app.sh
                  else
                    # Try to find and use standard cPanel Node.js app restart
                    if [ -f '/usr/local/cpanel/scripts/restartsrv_nodejs_app' ]; then
-                     /usr/local/cpanel/scripts/restartsrv_nodejs_app staging.illuminit.madagascar.webcup.hodi.host
+                     /usr/local/cpanel/scripts/restartsrv_nodejs_app test-the-end-page
                    elif [ -f '/scripts/restartsrv' ]; then
                      /scripts/restartsrv nodejs
                    else
@@ -143,4 +143,4 @@ jobs:
         if: always()
         run: |
           echo "SSH Deployment to staging server ${{ steps.deploy.outcome == 'success' && 'succeeded! 🚀' || 'failed! ❌' }}"
-          echo "Staging URL: https://staging.illuminit.madagascar.webcup.hodi.host"
+          echo "Staging URL: https://test-the-end-page"
