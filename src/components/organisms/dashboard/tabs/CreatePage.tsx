@@ -231,21 +231,35 @@ const CreatePage: React.FC<CreatePageProps> = () => {
                             Tone
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                            {['Dramatic', 'Ironic', 'Cringe', 'Classy'].map((tone) => (
-                                <div key={tone} className="flex items-center">
+                            {[
+                                { value: 'Dramatic', icon: 'fa-theater-masks', color: 'red' },
+                                { value: 'Ironic', icon: 'fa-meh-rolling-eyes', color: 'purple' },
+                                { value: 'Funny', icon: 'fa-laugh', color: 'yellow' },
+                                { value: 'Serious', icon: 'fa-user-tie', color: 'blue' },
+                                { value: 'Sad', icon: 'fa-sad-tear', color: 'indigo' },
+                                { value: 'Happy', icon: 'fa-smile-beam', color: 'green' },
+                                { value: 'Neutral', icon: 'fa-meh', color: 'gray' }
+                            ].map((tone) => (
+                                <div key={tone.value} className="flex items-center">
                                     <input 
-                                        id={`tone-${tone}`} 
+                                        id={`tone-${tone.value}`} 
                                         type="radio" 
                                         name="tone" 
                                         className="hidden peer" 
-                                        checked={formData.tone === tone}
-                                        onChange={() => handleToneChange(tone)}
+                                        checked={formData.tone === tone.value}
+                                        onChange={() => handleToneChange(tone.value)}
                                     />
                                     <label
-                                        htmlFor={`tone-${tone}`}
-                                        className="w-full p-3 text-center border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-red-500 peer-checked:text-red-500 hover:bg-gray-50"
+                                        htmlFor={`tone-${tone.value}`}
+                                        className={`w-full p-3 text-center border-2 border-gray-200 rounded-lg cursor-pointer 
+                                            transition-all duration-200 ease-in-out
+                                            flex flex-col items-center justify-center gap-2
+                                            hover:bg-gray-50 hover:border-${tone.color}-300
+                                            peer-checked:border-${tone.color}-500 peer-checked:bg-${tone.color}-50
+                                            peer-checked:text-${tone.color}-700 peer-checked:shadow-md`}
                                     >
-                                        {tone}
+                                        <i className={`fas ${tone.icon} text-xl ${formData.tone === tone.value ? `text-${tone.color}-500` : 'text-gray-400'}`}></i>
+                                        <span>{tone.value}</span>
                                     </label>
                                 </div>
                             ))}
