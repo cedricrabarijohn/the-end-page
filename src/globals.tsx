@@ -30,6 +30,9 @@ export const API_ROUTES = {
         GET_DATAS: '/api/user/datas',
         GET_PROFILE: '/api/user/profile',
         UPDATE_PROFILE: '/api/user/profile/update',
+        PAGES: {
+            CREATE: '/api/user/pages/create',
+        }
     }
 };
 
