@@ -23,3 +23,8 @@ export const login = async (email: string, password: string) => {
     });
     return response;
 };
+
+export const logout = async() => {
+    const resp = await axios.post(API_ROUTES.AUTH.LOGOUT);
+    return resp;
+}
