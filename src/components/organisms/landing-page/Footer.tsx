@@ -57,11 +57,7 @@ const Footer: React.FC = () => {
     }
   ];
 
-  const socialLinks = [
-    { icon: "fab fa-twitter", href: "#" },
-    { icon: "fab fa-instagram", href: "#" },
-    { icon: "fab fa-tiktok", href: "#" },
-    { icon: "fab fa-github", href: "#" }
+  const socialLinks: any[] = [
   ];
 
   return (

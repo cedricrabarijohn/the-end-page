@@ -282,15 +282,11 @@ const CreatePage: React.FC<CreatePageProps> = () => {
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                            Theme
-                        </label>
                         <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
                             {['red', 'blue', 'purple', 'green', 'orange', 'gray'].map((color, i) => (
                                 <div 
                                     key={i} 
-                                    onClick={() => handleThemeSelect(color)}
-                                    className={`h-16 rounded-lg bg-${color}-100 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-${color}-500 ${formData.theme === color ? `ring-2 ring-offset-2 ring-${color}-500` : ''}`}
+                                    className={`h-16 rounded-lg bg-${color}-100 hover:ring-offset-2`}
                                 ></div>
                             ))}
                         </div>
