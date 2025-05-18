@@ -44,11 +44,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ title, user }) => {
     
     return <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+            <h1 className="text-2xl font-bold text-gray-800">
+                <a href={PAGES_ROUTES.DASHBOARD.ROOT}>Dashboard</a>
+            </h1>
             <div className="flex items-center space-x-4">
-                <button className="bg-gray-200 p-2 rounded-full">
+                {/* <button className="bg-gray-200 p-2 rounded-full">
                     <i className="fas fa-bell text-gray-600"></i>
-                </button>
+                </button> */}
                 <div className="flex items-center relative" ref={menuRef}>
                     <div 
                         className="avatar text-[12px] w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold relative cursor-pointer"
