@@ -2,6 +2,24 @@ import pool from "@/lib/db";
 import { verifyJwt } from "./userServices";
 
 /**
+ * Generate a URL-friendly string from the title with a unique ID
+ */
+function generatePageUrl(title: string): string {
+  // Convert to lowercase, replace spaces with hyphens, remove special characters
+  const baseSlug = title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  
+  // Add timestamp and random string to ensure uniqueness
+  const timestamp = Date.now();
+  const randomString = Math.random().toString(36).substring(2, 8); // 6 character random string
+  
+  return `${baseSlug}-${timestamp}-${randomString}`;
+}
+
+/**
  * Creates a new page in the database
  * @param token JWT token containing user information
  * @param pageData Page data to be saved
@@ -29,11 +47,15 @@ export async function createPage(
   }
   
   const userId = decoded.id;
+  const uploadUrl = process.env.UPLOAD_STATIC_URL;
+  if (!uploadUrl) {
+    throw new Error("UPLOAD_STATIC_URL is not configured");
+  };
   
   // Format media data for database storage
-  const images = pageData.media.image ? JSON.stringify([pageData.media.image]) : JSON.stringify([]);
-  const videos = pageData.media.video ? JSON.stringify([pageData.media.video]) : JSON.stringify([]);
-  const audio = pageData.media.audio ? JSON.stringify([pageData.media.audio]) : JSON.stringify([]);
+  const images = pageData.media.image ? JSON.stringify([`${uploadUrl}/${pageData.media.image}`]) : JSON.stringify([]);
+  const videos = pageData.media.video ? JSON.stringify([`${uploadUrl}/${pageData.media.video}`]) : JSON.stringify([]);
+  const audio = pageData.media.audio ? JSON.stringify([`${uploadUrl}/${pageData.media.audio}`]) : JSON.stringify([]);
   
   // Generate a unique URL for the page
   const pageUrl = `/${userId}/${generatePageUrl(pageData.title)}`;
@@ -80,24 +102,6 @@ export async function createPage(
     console.error('Error creating page:', error);
     throw new Error('Failed to create page in database');
   }
-}
-
-/**
- * Generate a URL-friendly string from the title with a unique ID
- */
-function generatePageUrl(title: string): string {
-  // Convert to lowercase, replace spaces with hyphens, remove special characters
-  const baseSlug = title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  
-  // Add timestamp and random string to ensure uniqueness
-  const timestamp = Date.now();
-  const randomString = Math.random().toString(36).substring(2, 8); // 6 character random string
-  
-  return `${baseSlug}-${timestamp}-${randomString}`;
 }
 
 /**
