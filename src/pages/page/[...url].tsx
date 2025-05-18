@@ -286,7 +286,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const page = await getPageByUrl(fullSlug);
   
   // If page not found, return invalid format
-  if (!page) {
+  if (!page || page.status !== 'published') {
     return {
       props: {
         isValidFormat: false,

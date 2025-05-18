@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import DashboardHeader from '@/components/organisms/dashboard/DashboardHeader';
@@ -7,20 +7,35 @@ import { useUserStore } from '@/stores/useUserStore';
 import MyPages from '@/components/organisms/dashboard/tabs/MyPages';
 import CreatePage from '@/components/organisms/dashboard/tabs/CreatePage';
 import Analytics from '@/components/organisms/dashboard/tabs/Analytics';
+import { IPageData } from '@/app';
+import axios from 'axios';
+import { API_ROUTES } from '@/globals';
 
 const Dashboard: NextPage = () => {
     const [activeTab, setActiveTab] = useState<'myPages' | 'create' | 'analytics'>('myPages');
-
+    const [loading, setLoading] = useState(false);
+    const [userPages, setUserPages] = useState<IPageData[]>([]); // Replace with actual type if available
     // Mock data for demonstration
-    const mockExitPages = [
-        { id: '1', title: 'Quitting My Job', views: 245, created: '2023-10-15', status: 'active' },
-        { id: '2', title: 'Relationship Goodbye', views: 518, created: '2023-09-22', status: 'active' },
-        { id: '3', title: 'Farewell College', views: 127, created: '2023-08-05', status: 'draft' },
-    ];
-
-    const [existingPages] = useState(mockExitPages);
 
     const { user } = useUserStore();
+
+    const fetchUserPages = async () => {
+        try {
+            setLoading(true);
+            const resp = await axios.get(API_ROUTES.USER.PAGES.GET);
+            setUserPages(resp?.data);
+        } catch(err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            fetchUserPages();
+        };
+    }, [user]);
 
     return (
         <Protected>
@@ -58,7 +73,7 @@ const Dashboard: NextPage = () => {
 
                     {/* Tab Content */}
                     {activeTab === 'myPages' && (
-                        <MyPages pages={existingPages} onClickCta={() => setActiveTab('create')} />
+                        <MyPages pages={userPages} onClickCta={() => setActiveTab('create')} />
                     )}
 
                     {activeTab === 'create' && (

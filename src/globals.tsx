@@ -33,6 +33,7 @@ export const API_ROUTES = {
         PAGES: {
             CREATE: '/api/user/pages/create',
             DELETE: '/api/user/pages/delete',
+            GET: '/api/user/pages/get',
         }
     }
 };

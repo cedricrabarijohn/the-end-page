@@ -138,8 +138,8 @@ export async function getUserPages(token: string) {
                 audio: JSON.parse(row.audio),
             },
             views: row.views,
-            createdAt: row.created_at,
-            updatedAt: row.updated_at,
+            // createdAt: row.created_at,
+            // updatedAt: row.updated_at,
         }));
     } catch (error) {
         console.error('Error fetching user pages:', error);
