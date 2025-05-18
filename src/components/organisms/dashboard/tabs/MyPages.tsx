@@ -1,4 +1,4 @@
-import { API_ROUTES } from "@/globals";
+import { API_ROUTES, PAGES_ROUTES } from "@/globals";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -57,7 +57,9 @@ const MyPages: React.FC<MyPagesProps> = ({
                         {pages && pages?.length > 0 && pages?.map((page) => (
                             <tr key={page.id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm font-medium text-gray-900">{page.title}</div>
+                                    <div className="text-sm font-medium text-gray-900">
+                                        <a href={`/page${page?.url}`}>{page.title}</a>
+                                    </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${page.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
@@ -79,7 +81,9 @@ const MyPages: React.FC<MyPagesProps> = ({
                 </table>
             </div>
         </div>
-        
+        {!pages || !pages.length &&
+            <div>No entry</div>
+        }
     </div>
 };
 
