@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import Error from "next/error";
 import { getPageByUrl } from "@/services/pagesServices";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -49,6 +49,8 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
   }
 
   const [show, setShow] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // Animate content in after a short delay
@@ -58,6 +60,15 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Handle video loading events
+  const handleVideoLoadStart = () => {
+    setIsVideoLoading(true);
+  };
+
+  const handleVideoCanPlay = () => {
+    setIsVideoLoading(false);
+  };
 
   // Design configurations based on tone
   const designConfig = {
@@ -170,13 +181,27 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
               </div>
             )}
 
-            {/* Video */}
+            {/* Video with Loading State */}
             {page.media?.video && Array.isArray(page.media.video) && page.media.video.length > 0 && (
-              <div className="my-4">
+              <div className="my-4 relative">
+                {isVideoLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-lg z-10">
+                    <div className="flex flex-col items-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mb-2"></div>
+                      <p className="text-white text-sm">Loading video...</p>
+                    </div>
+                  </div>
+                )}
                 <video 
+                  ref={videoRef}
                   src={page.media.video[0]} 
                   controls
                   className="w-full rounded-lg"
+                  onLoadStart={handleVideoLoadStart}
+                  onCanPlay={handleVideoCanPlay}
+                  onWaiting={() => setIsVideoLoading(true)}
+                  onPlaying={() => setIsVideoLoading(false)}
+                  poster="/images/video-placeholder.jpg"
                 ></video>
               </div>
             )}
