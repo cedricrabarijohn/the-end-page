@@ -16,31 +16,10 @@ export default function Home() {
   const examplesRef = useRef<HTMLDivElement>(null)
   const howItWorksRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     sectionRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
   const { user, isUserDataLoading, fetchUserData } = useUserStore();
-
-  useEffect(() => {
-    // Check if already authenticated in localStorage
-    const storedAuth = localStorage.getItem('xxxxxxxllllll')
-
-    if (storedAuth === 'true') {
-      setIsAuthenticated(true)
-      return
-    }
-
-    const username = prompt('Please enter your username:')
-    const password = prompt('Please enter your password:')
-
-    if (username !== 'test' || password !== 'lelena') {
-      alert('Authentication failed. You are not authorized to access this page.')
-    } else {
-      setIsAuthenticated(true)
-      localStorage.setItem('xxxxxxxllllll', 'true')
-    }
-  }, []);
 
   useEffect(() => {
     if (!user && isUserDataLoading) {
@@ -51,10 +30,6 @@ export default function Home() {
   if (user) {
     window.location.href = PAGES_ROUTES.DASHBOARD.ROOT;
   };
-
-  if (!isAuthenticated) {
-    return null;
-  }
 
   return (
     <>
