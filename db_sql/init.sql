@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS users;
 
 -- Create users table
-CREATE TABLE users (
+CREATE TABLE  users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     firstname VARCHAR(100) NOT NULL,
@@ -21,3 +21,18 @@ CREATE TABLE users (
 -- VALUES ('test@example.com', 'John', 'Doe', NULL, '$2a$10$xVfzGxq5uZ3Up6I3KVtqvekRCPQWjEzG4g6V2WPu7XJyjLot5xeK.');
 
 -- Add additional tables as needed for your application below
+
+CREATE TABLE if NOT EXISTS user_pages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    page_title STRING(255) NOT NULL,
+    page_url STRING(255) NOT NULL,
+    page_content TEXT NOT NULL,
+    page_confidentiality ENUM('public', 'private') NOT NULL,
+    page_status ENUM('draft', 'published', 'archived') NOT NULL,
+    page_tags VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
