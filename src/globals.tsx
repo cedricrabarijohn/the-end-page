@@ -7,7 +7,12 @@ export const PAGES_ROUTES = {
         FORGOT_PASSWORD: '/auth/forgot-password',
         RESET_PASSWORD: '/auth/reset-password',
     },
-    DASHBOARD: '/dashboard',
+    DASHBOARD: {
+        ROOT: '/dashboard',
+        PAGE: {
+            EDIT: '/dashboard/page/edit',
+        }
+    },
 }
 
 export const API_ROUTES = {
@@ -22,6 +27,7 @@ export const API_ROUTES = {
         GET_DATA: '/api/dashboard/data',
     },
     USER: {
+        GET_DATAS: '/api/user/datas',
         GET_PROFILE: '/api/user/profile',
         UPDATE_PROFILE: '/api/user/profile/update',
     }

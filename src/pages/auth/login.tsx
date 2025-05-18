@@ -26,8 +26,8 @@ const Login = () => {
             const resp = await login(email, password);
             if (resp?.status === 200) {
                 setError(null);
-                toast.success('Login successful');
-                // window.location.href = PAGES_ROUTES.HOME;
+                toast.success('Logged in successfully');
+                window.location.href = PAGES_ROUTES.DASHBOARD.ROOT;
             } else {
                 setError('Invalid email or password');
             }

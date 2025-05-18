@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import DashboardHeader from '@/components/organisms/dashboard/DashboardHeader';
+import Protected from '@/components/organisms/protected/Protected';
 
 const Dashboard: NextPage = () => {
   const [activeTab, setActiveTab] = useState<'myPages' | 'create' | 'analytics'>('myPages');
@@ -16,7 +17,7 @@ const Dashboard: NextPage = () => {
   const [existingPages] = useState(mockExitPages);
   
   return (
-    <>
+    <Protected>
       <Head>
         <title>Dashboard | The End Page</title>
         <meta name="description" content="Manage your dramatic exit pages" />
@@ -263,7 +264,7 @@ const Dashboard: NextPage = () => {
           )}
         </main>
       </div>
-    </>
+    </Protected>
   );
 };
 
