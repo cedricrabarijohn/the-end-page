@@ -188,6 +188,45 @@ export async function getPageById(pageId: number) {
     }
 }
 
+export async function   getPageByUrl(pageUrl: string) {
+    try {
+        console.log("Fetching page by URL:", pageUrl);
+        // Query database for specific page
+        const [rows] = await pool.query(
+            `SELECT * FROM user_pages WHERE page_url = ?`,
+            [pageUrl]
+        );
+
+        if (!(rows as any[]).length) {
+            return null;
+        }
+
+        const page = (rows as any[])[0];
+
+        return {
+            id: page.id,
+            userId: page.user_id,
+            title: page.page_title,
+            url: page.page_url,
+            content: page.page_content,
+            confidentiality: page.page_confidentiality,
+            status: page.page_status,
+            tags: page.page_tags,
+            media: {
+                image: JSON.parse(page.images),
+                video: JSON.parse(page.videos),
+                audio: JSON.parse(page.audio),
+            },
+            views: page.views,
+            // createdAt: page.created_at,
+            // updatedAt: page.updated_at,
+        };
+    } catch (error) {
+        console.error('Error fetching page:', error);
+        throw new Error('Failed to fetch page from database');
+    }
+}
+
 /**
  * Increment page view count
  */
