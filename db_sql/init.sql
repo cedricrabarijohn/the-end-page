@@ -1,6 +1,7 @@
-DROP TABLE IF EXISTS users;
+-- IF YOU WANT TO DROP ALL TABLES AND RECREATE THEM, UNCOMMENT THE DROP TABLE STATEMENTS BELOW
 
 -- Create users table
+-- DROP TABLE IF EXISTS users;
 CREATE TABLE  users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -22,17 +23,25 @@ CREATE TABLE  users (
 
 -- Add additional tables as needed for your application below
 
+-- DROP TABLE IF EXISTS user_pages;
 CREATE TABLE if NOT EXISTS user_pages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    page_title STRING(255) NOT NULL,
-    page_url STRING(255) NOT NULL,
+    page_title VARCHAR(255) NOT NULL,
+    page_url VARCHAR(255) NOT NULL,
     page_content TEXT NOT NULL,
     page_confidentiality ENUM('public', 'private') NOT NULL,
     page_status ENUM('draft', 'published', 'archived') NOT NULL,
     page_tags VARCHAR(255),
+    images JSON,
+    videos JSON,
+    audio JSON,
+    views INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Add more tables as needed for your application below
+-- Example of creating a table for user settings
