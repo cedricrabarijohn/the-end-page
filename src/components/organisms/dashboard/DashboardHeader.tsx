@@ -1,4 +1,5 @@
 import { IUserDetails } from "@/app";
+import Image from "next/image";
 import React from "react";
 
 export interface DashboardHeaderProps {
@@ -15,8 +16,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ title, user }) => {
                     <i className="fas fa-bell text-gray-600"></i>
                 </button>
                 <div className="flex items-center">
-                    <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">
-                        u
+                    <div className="text-[12px] w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold relative">
+                        {user && user?.firstname?.charAt(0).toUpperCase()}{user && user?.lastname?.charAt(0).toUpperCase()}
                     </div>
                 </div>
             </div>
