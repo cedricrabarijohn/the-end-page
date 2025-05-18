@@ -66,7 +66,6 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
       textColor: "text-white",
       headingColor: "text-red-400",
       borderColor: "border-red-700",
-      fontStyle: "font-serif",
       animation: "animate-pulse",
       icon: "fa-theater-masks",
       buttonClass: "bg-red-700 hover:bg-red-800",
@@ -76,7 +75,6 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
       textColor: "text-gray-200",
       headingColor: "text-purple-300",
       borderColor: "border-purple-600",
-      fontStyle: "font-mono",
       animation: "animate-none",
       icon: "fa-meh-rolling-eyes",
       buttonClass: "bg-purple-700 hover:bg-purple-800",
@@ -86,7 +84,6 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
       textColor: "text-gray-900",
       headingColor: "text-yellow-900",
       borderColor: "border-yellow-500",
-      fontStyle: "font-sans",
       animation: "animate-bounce",
       icon: "fa-laugh-squint",
       buttonClass: "bg-yellow-600 hover:bg-yellow-700",
@@ -96,7 +93,6 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
       textColor: "text-gray-100",
       headingColor: "text-blue-300",
       borderColor: "border-blue-700",
-      fontStyle: "font-serif",
       animation: "animate-none",
       icon: "fa-user-tie",
       buttonClass: "bg-blue-800 hover:bg-blue-900",
@@ -106,7 +102,6 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
       textColor: "text-blue-100",
       headingColor: "text-blue-300",
       borderColor: "border-blue-500",
-      fontStyle: "font-serif",
       animation: "animate-none",
       icon: "fa-sad-tear",
       buttonClass: "bg-blue-700 hover:bg-blue-800",
@@ -116,7 +111,6 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
       textColor: "text-white",
       headingColor: "text-green-100",
       borderColor: "border-green-300",
-      fontStyle: "font-sans",
       animation: "animate-none",
       icon: "fa-smile-beam",
       buttonClass: "bg-green-600 hover:bg-green-700",
@@ -126,7 +120,6 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
       textColor: "text-gray-800",
       headingColor: "text-gray-700",
       borderColor: "border-gray-400",
-      fontStyle: "font-sans",
       animation: "animate-none",
       icon: "fa-meh",
       buttonClass: "bg-gray-600 hover:bg-gray-700 text-white",
@@ -144,7 +137,7 @@ const Page: React.FC<PageProps> = ({ isValidFormat, userId, slug, page }) => {
         <meta name="description" content={page.content || page.message} />
       </Head>
 
-      <div className={`min-h-screen ${design.bgColor} ${design.textColor} ${design.fontStyle} flex flex-col items-center justify-center p-4`}>
+      <div className={`min-h-screen ${design.bgColor} ${design.textColor} flex flex-col items-center justify-center p-4`}>
         {/* Content Container */}
         <div 
           className={`max-w-2xl w-full bg-opacity-20 bg-black backdrop-blur-md p-8 rounded-lg border ${design.borderColor} shadow-2xl transition-opacity duration-1000 ${show ? 'opacity-100' : 'opacity-0'}`}
