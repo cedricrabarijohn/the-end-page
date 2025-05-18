@@ -54,7 +54,7 @@ const MyPages: React.FC<MyPagesProps> = ({
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {pages.map((page) => (
+                        {pages && pages?.length > 0 && pages?.map((page) => (
                             <tr key={page.id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-900">{page.title}</div>
@@ -79,6 +79,7 @@ const MyPages: React.FC<MyPagesProps> = ({
                 </table>
             </div>
         </div>
+        
     </div>
 };
 
