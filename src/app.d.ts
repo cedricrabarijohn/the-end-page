@@ -26,7 +26,7 @@ export interface IPageData {
   url?: string;
   message: string;
   content?: string;
-  tone: tone;
+  tags: tone;
   theme: string;
   status: 'draft' | 'published' | 'archived';
   confidentiality?: 'public' | 'private';
