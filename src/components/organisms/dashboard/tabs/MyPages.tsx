@@ -69,7 +69,7 @@ const MyPages: React.FC<MyPagesProps> = ({
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div className="flex space-x-3">
                                         {/* <button className="text-blue-600 hover:text-blue-900">Edit</button> */}
-                                        <button onClick={() => onDelete()} className="text-red-600 hover:text-red-900">Delete</button>
+                                        <button onClick={() => onDelete(page.id)} className="text-red-600 hover:text-red-900">Delete</button>
                                         <button className="text-gray-600 hover:text-gray-900">Share</button>
                                     </div>
                                 </td>
