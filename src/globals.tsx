@@ -32,6 +32,7 @@ export const API_ROUTES = {
         UPDATE_PROFILE: '/api/user/profile/update',
         PAGES: {
             CREATE: '/api/user/pages/create',
+            DELETE: '/api/user/pages/delete',
         }
     }
 };
